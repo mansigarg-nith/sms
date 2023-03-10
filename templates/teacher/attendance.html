@@ -1,0 +1,95 @@
+{% extends 'home.html' %} 
+{% load static %} 
+{% block extra-head %}
+<link rel="stylesheet" href="{% static 'css/attendance.css' %}" />
+<link rel="stylesheet" href="{% static 'css/adminList.css' %}" />
+{% endblock extra-head %} 
+{% block school-img %}{% endblock school-img %}
+{% block content %}
+<section id="main">
+<!-- Start attendance -->
+{% if msg %}
+<section id="not-found">
+  <div class="not-found">
+    <h1>
+      <strong>You're not class teacher of any class.</strong>
+    </h1>
+  </div>
+</section>
+{% else %}
+<section id="start-att">
+  <div class="component-back">
+    <div>
+      <h2>Start Attendance</h2>
+      <p>Class 9th</p>
+    </div>
+    <button class="btn btn-lg">Start</button>
+  </div>
+  <div class="att-date flex">
+    <button class="btn btn-black">16/10/2021</button>
+    <button class="btn btn-black">Present All</button>
+  </div>
+</section>
+
+<!-- Student List -->
+<section id="home-menu">
+  <div class="home-menu">
+    {% for student in students %}
+    <div class="menu-list att-student-list">
+      <div>
+        <p>
+          {{ forloop.counter }}. {{ student.fname }} {% if student.mname != "NULL"%}{{student.mname}}{% endif %} {% if student.lname != "NULL"%}{{student.lname}}{% endif %} | {{ student.roll_no }}
+        </p>
+      </div>
+      {% if student.id in leaveId %}
+          <div class="applyLeave" data-target = "#{{ student.id }}">
+              <p class="stud-list-elem">
+                Applied For Leave <i class="fas fa-chevron-down"></i>
+              </p>
+          </div>
+      {% endif %}
+      <div id="{{ student.id }}" class="att-btns">
+        <button class="att-btn btn btn-md" onclick="btnHandler(event)" value="false">
+          Absent
+        </button>
+        <button class="att-btn btn btn-md" onclick="btnHandler(event)" value="true">
+          Present
+        </button>
+      </div>
+      <div class="stud-list-elem-options">
+          <button class="btn">Application</button>
+      </div>
+    </div>
+    {% for leave in leaves %}
+    {% if student.id == leave.student.id %}
+      <!-- modal for leave reason -->
+      <div class="modal-bg" id="{{ student.id }}">
+        <div class="modal">
+          <div class="leave-modal">
+            <h1 class="reason-heading">Reason</h1>
+              {{ leave.reason }} {{ student.id }} {{ leave.student.id }}
+            </p>
+            <div><p>Download Leave Application</p></div>
+          </div>
+
+          <span class="modal-close"><i class="fas fa-times"></i></span>
+        </div>
+      </div>
+      {% endif %}
+{% endfor %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %} 
+</section>
+{% endblock content %}
+{% block script %}
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js"
+  integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/applyLeave.js' %}"></script>
+{% endblock script %}

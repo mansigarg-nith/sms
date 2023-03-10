@@ -1,0 +1,46 @@
+{% extends 'adminhome.html' %} {% load static %} {% block extra-head %}
+<link rel="stylesheet" href="{% static '/css/attendance.css' %}" />
+<link rel="stylesheet" href="{% static '/css/notice.css' %}" />
+{% endblock extra-head %} 
+{% block content %}
+<section id="main">
+  <!-- Start attendance -->
+  <section id="start-att">
+    <div class="component-back">
+      <div>
+        <h2>New Notice</h2>
+      </div>
+      <a href="{% url 'notice:createNotice' %}">
+        <button class="btn btn-lg">Post</button>
+      </a>
+    </div>
+  </section>
+
+  <section class="notice-toggle">
+    <div class="notice-buttons">
+      <a href="{% url 'notice:superAdminNotice' "all" %}">
+      <button class="btn btn-md {% if category == "all" %}btn-black{% endif %}">Received</button>
+      </a>
+      <a href="{% url 'notice:superAdminNotice' "sent" %}">
+      <button class="btn btn-md {% if category == "sent" %}btn-black{% endif %}">Sent</button>
+      </a>
+    </div>
+  </section>
+
+  <!-- Student List -->
+  <section id="home-menu">
+    <div class="home-menu">
+      {% for notice in notices %}
+      <div class="menu-list notice-list">
+        <p>{{ notice.date.date }} | {{ notice.date.time }} <br /> 
+        {% if notice.posted_by %}<span>Posted By: {{notice.posted_by}}</span>{% endif %}  
+        </p>
+        <h2>{{ notice.topic }}</h2>
+        <p>{{ notice.desc }}</p>
+        <p>to Classes: <br /> {% for class in notice.receiver %}{{class.receiver.Class}}{{class.receiver.section}} | {% endfor %}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+{% endblock content %}

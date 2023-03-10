@@ -1,0 +1,159 @@
+{% extends 'notice.html' %} {% load static %} {% block extra-head %}
+<link rel="stylesheet" href="{% static '/css/attendance.css' %}" />
+<link rel="stylesheet" href="{% static '/css/notice.css' %}" />
+<link rel="stylesheet" href="{% static '/css/style.css' %}" />
+<link rel="stylesheet" href="{% static '/css/progress.css' %}" />
+{% endblock extra-head %} {% block content %}
+<section id="main">
+
+  <section id="lselect">
+    <div class="menu-list lselect">
+      <div class="leader-head">
+        <h2>Your Progress</h2>
+        <h3>Track your subject-wise progress</h3>
+        <h3>Filter By:</h3>
+      </div>
+      <div class="leader-filters">
+        <div class="leader-filter">
+          <p>Subject:</p>
+          <select class="leader-select" id="subselect">
+            <option value="none">Select Subject</option>
+            {% for subject in subjects %}
+            <option value="{{subject.id}}">{{ subject.subject }}</option>
+            {% endfor %} 
+            <!-- <option>Class 10</option>  -->
+          </select>
+        </div>
+        <button class="btn btn-black" onclick="submitHandler()">Apply</button>
+      </div>
+      <div class="linfo">
+        <p>
+          *If subject is not selected, then cumulative progress of all subjects is
+          shown:
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- table and graphs -->
+  <section class="progress">
+    <div class="progress-table">
+      <div class="table-heading table-rows exam-marks-list">
+        <h2 class="left-column">EXAM</h2>
+        <h2 class="right-column">MARKS</h2>
+      </div>
+      <!-- {{key}}, {{value.0}}  -->
+      <div id="table-rows">
+      {% for key, value in scores.items %} 
+        <div class="table-list table-rows">
+          <h3 class="left-column">{{ value.0 }}</h3>
+          <h3 class="right-column">{{ value.1 }}/{{ value.2 }} = {{value.3}}%</h3>
+        </div>
+      {% endfor %} 
+    </div>
+      <!-- <h3 class="left-column">{{ score.exam_held.exam.name }}</h3>
+      <h3 class="right-column">
+        {{ score.score }}/{{ score.exam_held.exam.max_marks }}
+      </h3> -->
+      <!-- <table>
+        <tr>
+          <th>Exam</th>
+          <th>Marks</th>
+        </tr>
+        {% for score in scores %}
+        <tr>
+          <td>{{ score.exam_held.exam.name }}</td>
+          <td>{{ score.score }}/{{ score.exam_held.exam.max_marks }}</td>
+        </tr>
+        {% endfor %}
+      </table> -->
+    </div>
+    <div class="chart">
+      <canvas id="myChart" width="100px" height="50px"></canvas>
+    </div>
+  </section>
+</section>
+{% endblock content %} {% block script %}
+<!-- <script src="{% static 'js/progress.js' %}"></script> -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js"
+  integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<!-- Chart.js cdn -->
+<script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
+      integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+<!-- Chart.js -->
+<script>
+  var mydata = "{{ scores_json|escapejs }}";
+  {% comment %} var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: [{% for key, value in scores.items %}'{{ value.0 }}', {% endfor %}],
+          datasets: [{
+              label: '% of Marks',
+              data: [{% for key, value in scores.items %}'{{ value.3 }}', {% endfor %}],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 2
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  }); {% endcomment %}
+
+  function scrollToBottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    history.scrollRestoration = "manual";
+    window.onload = scrollToBottom;
+  </script>
+
+<script src="{% static 'js/progressAPI.js' %}"></script>
+
+{% endblock script %}
+
+
+<!-- waste html -->
+<!-- <section id="progress-carousel">
+    <div class="subject-container">
+      <div class="subject-arrow">
+        <i class="fas fa-chevron-circle-left"></i>
+      </div>
+      <div class="subject">
+        {% for subject in subjects %}
+        <button class="subject-btn btn-black">{{ subject.subject }}</button>
+        {% endfor %}
+      </div>
+      <div class="subject-arrow">
+        <i class="fas fa-chevron-circle-right"></i>
+      </div>
+    </div>
+  </section> -->

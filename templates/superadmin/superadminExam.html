@@ -1,0 +1,72 @@
+{% extends 'adminhome.html' %} {% load static %} {% block extra-head %}
+<link rel="stylesheet" href="{% static 'css/attendance.css' %}" />
+<link rel="stylesheet" href="{% static 'css/teacherExam.css' %}" />
+{% endblock extra-head %} {% block content %}
+<!-- Start attendance -->
+<section id="start-att">
+  <div class="component-back">
+    <div>
+      <h2>Create Exam</h2>
+      <!-- <p>Class 9th</p> -->
+    </div>
+    <a href="{% url 'exam:superadminCreateExam' %}"
+      ><button class="btn btn-lg">Create</button></a
+    >
+  </div>
+  <div class="exam-list-txt">
+    <h1>LIST OF EXAMS</h1>
+    <div class="exam-list-class-filter">
+      <p>Filter by Class:</p>
+      <!-- <i class="fas fa-angle-double-right"></i> -->
+      <!-- <button class="btn btn-black">Class</button> -->
+      <select name="select-class" id="" onchange="submitHandler(event)">
+        <option value="all" selected="">Select Class</option>
+        {% for class in classes %}
+        <option>{{class.Class}}{{class.section}}</option>
+        {% endfor %}
+        <!-- <option value="31">1 A</option> -->
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- Student List -->
+<!-- {{ exam_lst }}  -->
+<section id="home-menu">
+  <div class="home-menu">
+    {% for current_exam in exam_lst %}
+    <div id="exam#{{ current_exam.exam.id }}" class="menu-list tech-exam-list">
+      <div>
+        <p>{{ current_exam.exam.date }}</p>
+      </div>
+      <div class="exam-data">
+        <a href="{% url 'exam:superadminmarksEdit' current_exam.id %}">
+          <div class="exam-desc">
+            <h3 class="text-underline">{{ current_exam.exam.name }}</h3>
+            <p>
+              Class <span class="exam-class">{{current_exam.subject.Class.Class}}{{current_exam.subject.Class.section}}</span> | 
+              {{current_exam.subject.subject}}
+            </p>
+          </div>
+        </a>
+        <div class="max-marks">
+          <h4>{{ current_exam.exam.max_marks }}</h4>
+          <p>Max Marks</p>
+        </div>
+        {% comment %}
+        <div class="students-enrolled">
+          <h4>28/30</h4>
+          <p>Student Enrolled</p>
+        </div>
+        {% endcomment %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock content %}
+{% block script %}
+<script src="{% static 'js/superadminExam.js' %}"></script>
+{% endblock script %}
+

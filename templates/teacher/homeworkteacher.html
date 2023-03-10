@@ -1,0 +1,47 @@
+{% extends 'attendance.html' %}
+{% load static %}
+{% block extra-head %}
+    <link rel="stylesheet" href="{% static '/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/attendance.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/notice.css' %}" />
+{% endblock extra-head %}
+{% block content %}
+    <section id="main">
+    <section id="start-att">
+        <div class="component-back">
+          <div>
+            <h2>Create Homework</h2>
+          </div>
+          <a href="{% url 'homework:createHomework' %}"
+            ><button class="btn btn-lg">Post</button></a
+          >
+        </div>
+      </section>
+
+      <!-- homework list -->
+
+      <section id="home-menu">
+        <div class="home-menu">
+          {% for homework in homeworks %}
+          <div class="menu-list notice-list">
+            <div class="notice-list-info">
+              <p>{{ homework.homework.date.date }} | {{ homework.homework.date.time }}</p>
+              <p>
+                <span>{{ homework.subject.subject }} </span><br />
+                <span>Class {{ homework.Class.Class }} {% if homework.Class.section %}{{ homework.Class.section }}{% endif %}</span>
+              </p>
+            </div>
+            <h2>Topic : {{ homework.homework.topic }}</h2>
+            <p>
+              {{ homework.homework.desc }}
+            </p>
+            <div class="duedate-submit-btn">
+              <a href = "{% url 'homework:homeworkList' homework.homework.id %}"><button class="btn btn-green">View</button></a>
+              <p><span>Due On: </span><br /><span>{{ homework.homework.due_date.date }} | {{ homework.homework.due_date.time }}</span></p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </section>
+{% endblock content %}

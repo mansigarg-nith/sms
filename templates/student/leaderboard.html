@@ -1,0 +1,115 @@
+{% extends 'notice.html' %} {% load static %} {% block extra-head %}
+<link rel="stylesheet" href="{% static '/css/attendance.css' %}" />
+<link rel="stylesheet" href="{% static '/css/style.css' %}" />
+<link rel="stylesheet" href="{% static '/css/progress.css' %}" />
+{% endblock extra-head %} 
+{% block content %}
+<section id="main">
+  <!-- leaderboard selection section -->
+  <section id="lselect">
+    <div class="menu-list lselect">
+      <div class="leader-head">
+        <h2>Your Leaderboard</h2>
+        <h3>Track your performance with others</h3>
+        <h3>Filter By:</h3>
+      </div>
+      <div class="leader-filters">
+        <div class="leader-filter">
+          <p>Exam:</p>
+          <select class="leader-select" id="examselect">
+            <option value="none">Select Exam</option>
+            {% for exam in exams %}
+            <option value="{{exam.id}}">{{exam.name}}</option>
+            {% endfor %}
+            {% comment %} <option>Class 1</option> {% endcomment %}
+          </select>
+        </div>
+        <div class="leader-filter">
+          <p>Subject:</p>
+          <select class="leader-select" id="subselect">
+            <option value="none">Select Subject</option>
+            {% for subject in subjects %}
+            <option value="{{subject.id}}">{{ subject.subject }}</option>
+            {% endfor %}
+            {% comment %} <option>Class 10</option> {% endcomment %}
+          </select>
+        </div>
+        <button class="btn btn-black" onclick="submitHandler()">Apply</button>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} <section id="progress-carousel">
+    <div class="subject-container">
+      <div class="subject-arrow">
+        <i class="fas fa-chevron-circle-left"></i>
+      </div>
+      <div class="subject">
+        {% for subject in subjects %}
+        <button class="subject-btn btn-black">{{ subject.subject }}</button>
+        {% endfor %}
+      </div>
+      <div class="subject-arrow">
+        <i class="fas fa-chevron-circle-right"></i>
+      </div>
+    </div>
+  </section> {% endcomment %}
+
+  <!-- student list -->
+
+  <section id="start-att">
+    <div class="component-back">
+      <h2>
+        Class {{ class.Class }} {% if class.section %}{{ class.section }}{% endif %}
+      </h2>
+      <h2>Overall Score</h2>
+    </div>
+  </section>
+
+  <!-- <section>
+    <div class="student-list">
+      {% for student in students %} {% for mark in marks %} 
+      {% if forloop.counter == forloop.parentloop.counter %}
+      <div class="add-stud-list">
+        <p>
+          {{ forloop.counter }}. {{ student.fname }} 
+          {% if student.mname != "NULL" %}{{student.mname}}{% endif %}
+          {% if student.lname != "NULL" %}{{ student.lname }}{% endif %} | {{ student.roll_no }}
+        </p>
+        <h2>{{ mark }}</h2>
+      </div>
+      {% endif %} 
+      {% endfor %}
+      {% endfor %}
+    </div>
+  </section> -->
+  <section>
+    <div class="student-list">
+    {% for value in scores_dict %}
+      <div class="add-stud-list">
+        <p>
+          {{forloop.counter}}. {{value.1.0}} | {{value.1.1}}
+        </p>
+        <h2>{{value.1.2}}</h2>
+      </div>
+    {% endfor %}
+      <!-- <div class="add-stud-list">
+        <p>
+          1. Mayur | 71
+        </p>
+        <h2>69</h2>
+      </div> -->
+    </div>
+  </section>
+</section>
+{% endblock content %}
+{% block script %}
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.23.0/axios.min.js"
+  integrity="sha512-Idr7xVNnMWCsgBQscTSCivBNWWH30oo/tzYORviOCrLKmBaRxRflm2miNhTFJNVmXvCtzgms5nlJF4az2hiGnA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="{% static '/js/leaderboard.js' %}"></script>
+{% endblock script %}
+
